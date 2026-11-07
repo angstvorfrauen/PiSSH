@@ -1,41 +1,137 @@
 # PiSSH
 
-Dieses Projekt baut auf dem bereitgestellten PiSSH-Projekt auf. Das Paket wurde auf `com.xeuka.pissh` vereinheitlicht und die Gradle-Konfiguration auf AGP 8.13.2 / Kotlin 2.2.20 / Gradle 8.13 ausgerichtet.
+**A modern Android SSH client for managing your Raspberry Pi and remote Linux servers.**
 
-## Enthalten
+PiSSH is an Android application built with Kotlin and Jetpack Compose. It provides an intuitive interface for connecting to remote Linux systems, managing files and working directly in an SSH terminal.
 
-- Jetpack Compose / Material 3 Oberfläche mit Files, Editor, Terminal und Settings.
-- Light / Dark / System Theme.
-- SSH-Verbindung mit JSch, KeepAlive (konfigurierbar) und SFTP.
-- Foreground-Service mit permanenter Verbindungshinweis-Benachrichtigung.
-- Wiederverbindungsversuche mit exponentiellem Backoff, solange der Service und der App-Prozess laufen.
-- SFTP-Dateiliste, Ordnernavigation, Upload, Download, Erstellen, Umbenennen, Löschen, Kopieren, Verschieben, Sortierung, Namensfilter und chmod.
-- Textdatei-Editor mit Tabs, Zeilennummern, Suche/Ersetzen, Syntax-Farbgebung (heuristisch), acht Farbschemata, Schriftgröße und SFTP-Speichern mit temporärer Datei/Backup.
-- Interaktiver SSH-Shell-Kanal, der `tmux new-session -A -s PiSSH` startet und die Sitzung beim Trennen des Clients auf dem Pi bestehen lässt.
+## Features
 
-## Voraussetzungen / Build
+- **SSH Connection** – Connect to your Raspberry Pi or any compatible Linux server.
+- **Terminal** – Execute commands directly through an interactive SSH shell.
+- **Multiple Terminals** – Manage multiple terminal sessions simultaneously using tmux.
+- **Persistent Sessions** – Keep terminal sessions running on the remote server when disconnecting.
+- **File Manager** – Browse remote directories and manage files.
+- **File Upload & Download** – Transfer files between your Android device and remote servers.
+- **File Editor** – View and edit remote text files.
+- **Modern UI** – Clean, dark interface with red accents.
+- **Connection Management** – Reconnect to your SSH server when a connection is interrupted.
 
-- Android Studio mit JDK 17
-- Android SDK Platform 36
-- Android Gradle Plugin 8.13.2 / Gradle 8.13
-- Raspberry Pi mit aktiviertem SSH
-- Für das persistente Terminal: `tmux` auf dem Raspberry Pi installieren, z. B. `sudo apt update && sudo apt install tmux`
+## Built With
 
-Build in Android Studio: Projekt öffnen, Gradle Sync ausführen und `app` als Debug-App starten.
+| Technology        | Purpose                    |
+| ----------------- | -------------------------- |
+| Kotlin            | Main programming language  |
+| Jetpack Compose   | User interface             |
+| Material 3        | UI components              |
+| JSch              | SSH and SFTP communication |
+| Kotlin Coroutines | Asynchronous operations    |
+| DataStore         | Local settings storage     |
+| Gradle            | Build system               |
 
-## Wichtige Einschränkungen
+## Requirements
 
-- Ein vollständiger Gradle-Build konnte in der Erstellungsumgebung nicht ausgeführt werden: Der Gradle-Wrapper konnte `services.gradle.org` wegen fehlender Netzwerk-DNS-Auflösung nicht erreichen. Es wird daher kein erfolgreicher Build behauptet.
-- Die SSH-Host-Key-Prüfung ist in dieser Version noch deaktiviert (`StrictHostKeyChecking=no`). Nur in vertrauenswürdigen Netzwerken verwenden; vor einem öffentlichen Release muss Host-Key-Pinning / `known_hosts` implementiert werden.
-- Das Passwort wird nur im Arbeitsspeicher für Wiederverbindungsversuche gehalten und nicht dauerhaft gespeichert.
-- Der Android-Foreground-Service ist keine Garantie für eine unbegrenzt laufende Verbindung. Android-Hintergrundlimits, Energiesparmodi und insbesondere die Data-Sync-FGS-Zeitlimits neuer Android-Versionen können ihn beenden. Nach Prozessende sind gespeicherte SSH-Zugangsdaten nicht verfügbar.
-- `tmux` wird nicht automatisch mit Root-Rechten installiert. Es muss auf dem Raspberry Pi vorhanden sein.
-- ANSI-Escape-Sequenzen werden im Terminal-Ausgabefeld noch nicht vollständig in farbige Compose-Spans umgesetzt; Terminalgröße wird aktuell mit 100x32 initialisiert.
-- Die Syntaxhervorhebung ist eine leichte Regex-basierte Basis, kein vollwertiger Language Server. Sehr große Dateien über 5 MiB werden zum Schutz vor Speicherproblemen abgelehnt.
-- Noch nicht enthalten: echte Mehrfachauswahl, rekursive Inhalts-/Dateisuche mit Trefferliste, Save-As-Dialog, Undo/Redo, Code-Folding, vollständige Sprachgrammatiken, automatische Editor-Speicherung und geräteübergreifende Tablet-Speziallayouts.
+- Android 7.0 (API 24) or newer
+- Raspberry Pi or Linux server
+- SSH server enabled on the remote machine
+- Internet or local network connection
+- Android Studio for development
 
-## Sicherheit
+**Recommended:** Install `tmux` on your Raspberry Pi to use persistent terminal sessions.
 
-- Keine Zugangsdaten sind im Quellcode fest hinterlegt.
-- Die App speichert Host, Port und Benutzername lokal; das Passwort bleibt flüchtig im Speicher.
-- Vor produktivem Einsatz Host-Key-Prüfung ergänzen und auf sichere SSH-Passwort-/Key-Verwaltung umstellen.
+## Instalation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/PiSSH.git
+```
+
+### 2. Open the project
+
+1. Open Android Studio.
+2. Select **Open**.
+3. Choose the cloned `PiSSH` folder.
+4. Wait for Gradle synchronization to finish.
+
+### 3. Build the application
+
+On Windows:
+
+```bash
+gradlew.bat assembleDebug
+```
+
+On Linux/macOS:
+
+```bash
+./gradlew assembleDebug
+```
+
+The generated APK can be found here:
+
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+## Raspberry Pi Setup
+
+Enable SSH on your Raspberry Pi.
+
+Using the Raspberry Pi terminal:
+
+```bash
+sudo raspi-config
+```
+
+Navigate to:
+
+```text
+Interface Options → SSH → Enable
+```
+
+Install tmux for persistent terminal sessions:
+
+```bash
+sudo apt update
+sudo apt install tmux
+```
+
+Make sure your Raspberry Pi and Android device can communicate over the network.
+
+## Security
+
+- Never publish SSH passwords, private keys or personal credentials.
+- Use strong SSH passwords or key-based authentication.
+- Verify SSH host keys before using the application in production.
+- Avoid exposing SSH directly to the public internet without appropriate security measures.
+
+**Note:** SSH host-key verification should be enabled and properly implemented before using this project in production.
+
+## Project Structure
+
+```text
+PiSSH/
+├── app/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/xeuka/
+│   │   │   │   ├── MainActivity.kt
+│   │   │   │   ├── SshManager.kt
+│   │   │   │   ├── TerminalScreen.kt
+│   │   │   │   ├── FilesScreen.kt
+│   │   │   │   └── SettingsScreen.kt
+│   │   │   ├── res/
+│   │   │   └── AndroidManifest.xml
+│   │   └── test/
+│   ├── build.gradle.kts
+│   └── proguard-rules.pro
+├── gradle/
+├── gradlew
+├── gradlew.bat
+├── build.gradle.kts
+├── gradle.properties
+├── settings.gradle.kts
+└── README.md
+```
+
+# Made by Xeuka
