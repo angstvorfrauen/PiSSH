@@ -1,4 +1,4 @@
-# PiSSH – Upgrade 2.0
+# PiSSH
 
 Dieses Projekt baut auf dem bereitgestellten PiSSH-Projekt auf. Das Paket wurde auf `com.xeuka.pissh` vereinheitlicht und die Gradle-Konfiguration auf AGP 8.13.2 / Kotlin 2.2.20 / Gradle 8.13 ausgerichtet.
 
